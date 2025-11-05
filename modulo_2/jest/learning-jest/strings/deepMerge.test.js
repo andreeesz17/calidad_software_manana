@@ -1,13 +1,43 @@
-const { enMayusculas } = require('./enMayusculas');
+const { deepMerge, normalizarAlumno } = require('./deepMerge');
 
-describe('En Mayusculas', () => {
-    test('Happy path: JEST', () => {
-        const response = enMayusculas('jest');
-        expect(response).toBe('JEST');
+describe('Igualdad profunda', () => {
+    test('Happy path: deepMerge'
+        + 'combina objetos anidados por valor', () => {
+        const a= {
+            user: 
+            {nombre: 'Ana', rol: 'estudiante'},
+            activo: true
+        }
+        const b= {
+            user: 
+            {rol: 'tutor'}, 
+            activo: true,
+            extra: 1
+        }
+        const response = deepMerge(a,b)
+        expect(response).toEqual(
+            {
+                user: 
+                {nombre: 'Ana', rol: 'tutor'},
+                activo: true,
+                extra:1
+            }   
+        );
     });
-    test('Sad path: ERROR',
+
+    test('Happy path: normalizarAlumno '
+        + 'retorna estructura con promedio', () => {
+        const alumno= {nombre: 'Ana', notas: [8,9,7]}
+        const response = normalizarAlumno(alumno);
+        expect(response).toEqual(
+            {nombre: 'Ana', notas: [8,9,7], promedio: 8}
+        );
+    });
+    test('Sad path: deep merge con parámetros inválidos',
         () => {
-            expect(() => enMayusculas(null)).toThrow('texto invalido');
-            expect(() => enMayusculas(123)).toThrow('texto invalido');
-        });
+            expect(() => deepMerge(null,{}))
+                .toThrow(`b debe ser objeto`);
+            expect(() => deepMerge({},[]))
+                .toThrow(`b debe ser objeto`);
+    });
 });
